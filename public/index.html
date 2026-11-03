@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>camany | 新開組 日報・業務管理 試作</title>
+  <link rel="stylesheet" href="/public/styles.css">
+  <script type="module" src="/src/ui/app.js"></script>
+</head>
+<body>
+  <header><div class="brand">CAMANY <span>株式会社新開組</span></div><span class="badge">初期試作 v0.1</span></header>
+  <main>
+    <div class="intro"><p class="eyebrow">DAILY WORK REPORT</p><h1>日報から、業務をつなぐ。</h1><p>一度の入力で、出勤・給与資料・運行・処分・燃料を確認。</p></div>
+    <aside class="notice"><strong>架空データで試す画面</strong><br>入力はこのタブ内だけに保持し、再読み込みで消えるよ。ログイン・共有保存は未実装。実際の個人情報や給与情報は入力しないでね。</aside>
+    <div class="toolbar"><button id="load-demo" type="button">架空サンプル2件を読み込む</button><label>集計する月 <input type="month" id="month"><span class="hint">空欄なら全期間</span></label><span id="report-count">日報 0件</span></div>
+    <nav aria-label="管理画面">
+      <button type="button" data-screen="daily" aria-current="page">日報入力</button>
+      <button type="button" data-screen="attendance">出勤簿</button>
+      <button type="button" data-screen="payroll">給与資料</button>
+      <button type="button" data-screen="transport">運行管理</button>
+      <button type="button" data-screen="disposal">処分費</button>
+      <button type="button" data-screen="fuel">燃料管理</button>
+    </nav>
+    <p id="status" role="status" aria-live="polite"></p>
+    <section id="daily" aria-labelledby="daily-title">
+      <div class="section-title"><h2 id="daily-title">日報入力</h2><span>金額入力は管理側で行う予定</span></div>
+      <form id="report-form">
+        <div class="grid">
+          <label>作業日 <input name="date" type="date" required></label>
+          <label>社員番号・氏名 <select name="employeeId" required></select></label>
+          <label>現場 <select name="siteId" required></select></label>
+          <label>出勤 <input name="start" type="time" required></label>
+          <label>退社 <input name="end" type="time" required></label>
+          <label>休憩（分）<input name="breakMinutes" type="number" min="0" step="1" required></label>
+        </div>
+        <label>作業内容 <textarea name="work" rows="3" maxlength="1000" required placeholder="架空の作業内容を入力"></textarea></label>
+        <p class="hint">同日内の作業に対応。1日複数現場の場合は、時間が重ならない日報に分けて試せるよ。日またぎ・休暇・残業区分は要確認。</p>
+        <fieldset><legend>運搬明細</legend><div id="hauls"></div><button type="button" id="add-haul">＋ 運搬を追加</button></fieldset>
+        <fieldset><legend>給油明細</legend><div id="fuels"></div><button type="button" id="add-fuel">＋ 給油を追加</button></fieldset>
+        <div class="actions"><button type="submit" class="primary" id="save-report">日報を反映する（試作）</button><button type="button" id="reset-form">入力をクリア</button></div>
+      </form>
+      <h2>入力済み日報</h2><p class="hint">「修正」で同じ日報を更新すると、各画面も再集計されるよ。</p><div id="report-list"></div>
+    </section>
+    <section id="ledger" hidden aria-labelledby="ledger-title"><h2 id="ledger-title"></h2><p id="ledger-note"></p><div id="ledger-content"></div></section>
+    <footer>給与額・残業・処分単価は要確認。実働時間は退社−出勤−休憩の分単位の参考値。正式帳票・給与明細・法定書類ではないよ。</footer>
+  </main>
+</body>
+</html>
